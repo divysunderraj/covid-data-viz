@@ -41,7 +41,7 @@
 
                         const x_axis = d3.axisBottom(x);
                         const y_axis = d3.axisLeft(y);
-                        svg.append("text").attr("x", 600 / 2).attr("y", -10).attr("text-anchor", "middle").style("font-size", "18px").text("Waves of Covid-19 in Europe");
+                        svg.append("text").attr("x", 600 / 2).attr("y", -10).attr("text-anchor", "middle").style("font-size", "18px").style("font-weight", "bold").text("Waves of Covid-19 in Europe");
 
                         svg.append("g").attr("transform", "translate(0,300)").call(x_axis);
                         svg.append("text").attr("class", "x-label").attr("text-anchor", "middle").attr("x", 250).attr("y", 340).text("Timeframe");
@@ -83,6 +83,9 @@
                         var ann2 = d3.annotation().annotations(new_annotation);
                         svg.append("g").call(ann2);
 
+                        svg.append("rect").attr("x", width * 0.47).attr("y", 120 + 50).attr("height", 60).attr("width", 360).attr("fill", "#6F4E37");
+                        svg.append("text").attr("x", width * 0.65).attr("y", 150 + 50).attr("text-anchor", "middle").style("font-size", "14px").text("Use Go Back/Next to navigate to different scenes");
+
                     } else if (number == 2) {
                         svg.selectAll("*").remove();
                         d3.select("#toggleBtn").style("visibility", "hidden");
@@ -92,7 +95,7 @@
 
                         const x_axis = d3.axisBottom(x);
                         const y_axis = d3.axisLeft(y);
-                        svg.append("text").attr("x", 600 / 2).attr("y", -10).attr("text-anchor", "middle").style("font-size", "18px").text("Waves of Covid-19 in Europe");
+                        svg.append("text").attr("x", 600 / 2).attr("y", -10).attr("text-anchor", "middle").style("font-size", "18px").style("font-weight", "bold").text("Waves of Covid-19 in Europe");
 
                         svg.append("g").attr("transform", "translate(0,300)").call(x_axis);
                         svg.append("text").attr("class", "x-label").attr("text-anchor", "middle").attr("x", 250).attr("y", 340).text("Timeframe");
@@ -117,6 +120,9 @@
 
                         var ann = d3.annotation().annotations(annotations);
                         svg.append("g").call(ann);
+
+                        svg.append("rect").attr("x", width * 0.47).attr("y", 120 + 50).attr("height", 60).attr("width", 360).attr("fill", "#6F4E37");
+                        svg.append("text").attr("x", width * 0.65).attr("y", 150 + 50).attr("text-anchor", "middle").style("font-size", "14px").text("Use Go Back/Next to navigate to different scenes");
 
                     } else if (number == 3) {
                         svg.selectAll("*").remove()
@@ -158,7 +164,7 @@
                                 
                             }
                             
-                            svg.append("text").attr("x", 600 / 2).attr("y", -10).attr("text-anchor", "middle").style("font-size", "18px").text("Covid-19 Across Top 5 Populous Countries in Europe");
+                            svg.append("text").attr("x", 600 / 2).attr("y", -10).attr("text-anchor", "middle").style("font-size", "18px").style("font-weight", "bold").text("Covid-19 Across Top 5 Populous Countries in Europe");
 
                             svg.append("g").attr("transform", "translate(0,300)").call(x_axis);
                             svg.append("text").attr("class", "x-label").attr("text-anchor", "middle").attr("x", 250).attr("y", 340).text("Timeframe");
@@ -167,6 +173,9 @@
 
                             var legend = svg.selectAll("labels").data(country_group).enter().append("g").attr("class", "legend").attr("transform", function(d, i) {return "translate(" +(i*100)+",380)";});
                             legend.append("text").attr("x", 0).attr("y",-15).text(function(d) {return d.key;}).style("fill", function(d,i) {return colors(d.key);});
+
+                            svg.append("rect").attr("x", width * 0.47).attr("y", 120 + 50).attr("height", 60).attr("width", 360).attr("fill", "#6F4E37");
+                            svg.append("text").attr("x", width * 0.65).attr("y", 150 + 50).attr("text-anchor", "middle").style("font-size", "14px").text("Use Go Back/Next to navigate to different scenes");
                         } else {
                             var eu_countries = data.filter(function(d) {return  d.location === 'France' || d.location === 'Germany' || d.location === 'Italy' || d.location === 'Russia' || d.location === 'United Kingdom';});
                 
@@ -200,7 +209,7 @@
                                 
                             }
                             
-                            svg.append("text").attr("x", 600 / 2).attr("y", -10).attr("text-anchor", "middle").style("font-size", "18px").text("Covid-19 Across Top 5 Populous Countries in Europe");
+                            svg.append("text").attr("x", 600 / 2).attr("y", -10).attr("text-anchor", "middle").style("font-size", "18px").style("font-weight", "bold").text("Covid-19 Across Top 5 Populous Countries in Europe");
 
                             svg.append("g").attr("transform", "translate(0,300)").call(x_axis);
                             svg.append("text").attr("class", "x-label").attr("text-anchor", "middle").attr("x", 250).attr("y", 340).text("Timeframe");
@@ -209,6 +218,9 @@
 
                             var legend = svg.selectAll("labels").data(country_group).enter().append("g").attr("class", "legend").attr("transform", function(d, i) {return "translate(" +(i*100)+",380)";});
                             legend.append("text").attr("x", 0).attr("y",-15).text(function(d) {return d.key;}).style("fill", function(d,i) {return colors(d.key);});
+
+                            svg.append("rect").attr("x", width * 0.47).attr("y", 120 + 50).attr("height", 60).attr("width", 360).attr("fill", "#6F4E37");
+                            svg.append("text").attr("x", width * 0.65).attr("y", 150 + 50).attr("text-anchor", "middle").style("font-size", "14px").text("Use Go Back/Next to navigate to different scenes");
                         }
                     }
 
