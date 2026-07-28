@@ -52,11 +52,11 @@
                         
                         const annotations = [
                             {
-                                note: { label: "This is where the first wave of COVID cases begin to affect Europe" },
-                                x: x(new Date("2020-11-01")),
-                                y: y(200000),
-                                dy: -140,
-                                dx: 100,
+                                note: { label: "This is where the first wave of COVID cases begin to affect Europe (April 2020)" },
+                                x: x(new Date("2020-04-01")),
+                                y: y(50000),
+                                dy: -70,
+                                dx: 40,
                                 type: d3.annotationLabel,
                                 connector: { end: "arrow" },
                             },
@@ -64,6 +64,22 @@
 
                         var ann = d3.annotation().annotations(annotations);
                         svg.append("g").call(ann);
+
+                        const new_annotation = [
+                            {
+                                note: { label: "The first vaccine comes out on December 27 2020" },
+                                x: x(new Date("2020-12-27")),
+                                y: y(240000),
+                                dy: -170,
+                                dx: 80,
+                                type: d3.annotationLabel,
+                                connector: { end: "arrow" },
+                            },
+                            ];
+
+                        var ann2 = d3.annotation().annotations(new_annotation);
+                        svg.append("g").call(ann2);
+
                     } else if (number == 2) {
                         svg.selectAll("*").remove();
                         d3.select("#toggleBtn").style("visibility", "hidden");
@@ -85,7 +101,7 @@
 
                         const annotations = [
                             {
-                                note: { label: "February 2022 - this is where we see the peak of new COVID cases throughout Europe" },
+                                note: { label: "February 2022 peak in COVID - due to Omicron variant" },
                                 x: x(new Date("2022-02-11")),
                                 y: y(1550000),
                                 dy: 40,
