@@ -1,5 +1,6 @@
 <body>
     <div id="chart">
+        <p id="loadingMesssage" style="visibility: visible;">Loading - please wait</p>
         <button id="backBtn" style="position: relative; left: 494px; bottom: 75px">Go Back</button >
         <button id="nextBtn" style="position: relative; left: 494px;  bottom: 75px">Next</button >
         <button id="toggleBtn" class="toggle-button" style="position: relative; visibility: hidden; left: 494px;  bottom: 75px">Toggle Europe</button>
@@ -211,6 +212,7 @@
                 }
                 
                 renderScene(scene);
+                document.getElementById("loadingMesssage").style.visibility = "hidden";
 
                 backButton.addEventListener('click', () => {
                     if (scene - 1 >= minSceneNumber) {
