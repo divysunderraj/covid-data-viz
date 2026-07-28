@@ -1,0 +1,222 @@
+<body>
+    <div id="chart">
+        <button id="backBtn" style="position: relative; left: 494px; bottom: 75px">Go Back</button >
+        <button id="nextBtn" style="position: relative; left: 494px;  bottom: 75px">Next</button >
+        <button id="toggleBtn" class="toggle-button" style="position: relative; visibility: hidden; left: 494px;  bottom: 75px">Toggle Europe</button>
+        <div id = "toolTip" style="position: absolute; opacity: 0; background: white; border: 1px solid black; padding: 8px; pointer-events: none; left: 80px; top: 430px;"></div>
+        <script src="https://d3js.org/d3.v5.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-annotation/2.5.1/d3-annotation.min.js"></script>
+        <script>
+            const width = 1000;
+            const height = 600;
+            var parser = d3.timeParse("%Y-%m-%d");
+            const backButton = document.getElementById("backBtn");
+            const nextButton = document.getElementById("nextBtn");
+            const toggleEuropeBtn = document.getElementById("toggleBtn");
+            var minSceneNumber = 1;
+            var maxSceneNumber = 3; //update this 
+            var scene = 1;
+            var toggleEurope = true;
+
+
+            const svg = d3.select("#chart").append("svg").attr("width", width).attr("height", height).append("g").attr("transform", "translate(80,50)");
+
+
+            d3.csv("owid-covid-data.csv").then(data => {
+                data.forEach(function(d) {
+                    d.date = parser(d.date);
+                    d.new_cases_smoothed = + d.new_cases_smoothed;
+                })
+                var eu = data.filter(function(d) {return d.location === 'Europe';});
+                //console.log("eu records");
+
+                function renderScene(number) {
+                    if (number == 1) {
+                        svg.selectAll("*").remove();
+                        d3.select("#toggleBtn").style("visibility", "hidden");
+                        //axis
+                        const x = d3.scaleTime().domain(d3.extent(eu, function(d) {return d.date;})).range([0,500]);
+                        const y = d3.scaleLinear().domain(d3.extent(eu, function(d) {return d.new_cases_smoothed;})).range([300,0]);
+
+                        const x_axis = d3.axisBottom(x);
+                        const y_axis = d3.axisLeft(y);
+                        svg.append("text").attr("x", 600 / 2).attr("y", -10).attr("text-anchor", "middle").style("font-size", "18px").text("Waves of Covid-19 in Europe");
+
+                        svg.append("g").attr("transform", "translate(0,300)").call(x_axis);
+                        svg.append("text").attr("class", "x-label").attr("text-anchor", "middle").attr("x", 250).attr("y", 340).text("Timeframe");
+                        svg.append("g").call(y_axis);
+                        svg.append("text").attr("class", "y-label").attr("text-anchor", "middle").attr("transform", "rotate(-90)").attr("x", -150).attr("y", -60).text("New Cases over 7 day-avg");
+                        
+                        const line = d3.line().x(function(d) { return x(d.date); }).y(function(d) { return y(d.new_cases_smoothed);});
+                        svg.append("path").attr("d", line(eu)).attr("stroke", "currentColor").attr("fill", "none");
+                        
+                        const annotations = [
+                            {
+                                note: { label: "This is where the first wave of COVID cases begin to affect Europe" },
+                                x: x(new Date("2020-11-01")),
+                                y: y(200000),
+                                dy: -140,
+                                dx: 100,
+                                type: d3.annotationLabel,
+                                connector: { end: "arrow" },
+                            },
+                            ];
+
+                        var ann = d3.annotation().annotations(annotations);
+                        svg.append("g").call(ann);
+                    } else if (number == 2) {
+                        svg.selectAll("*").remove();
+                        d3.select("#toggleBtn").style("visibility", "hidden");
+                        //axis
+                        const x = d3.scaleTime().domain(d3.extent(eu, function(d) {return d.date;})).range([0,500]);
+                        const y = d3.scaleLinear().domain(d3.extent(eu, function(d) {return d.new_cases_smoothed;})).range([300,0]);
+
+                        const x_axis = d3.axisBottom(x);
+                        const y_axis = d3.axisLeft(y);
+                        svg.append("text").attr("x", 600 / 2).attr("y", -10).attr("text-anchor", "middle").style("font-size", "18px").text("Waves of Covid-19 in Europe");
+
+                        svg.append("g").attr("transform", "translate(0,300)").call(x_axis);
+                        svg.append("text").attr("class", "x-label").attr("text-anchor", "middle").attr("x", 250).attr("y", 340).text("Timeframe");
+                        svg.append("g").call(y_axis);
+                        svg.append("text").attr("class", "y-label").attr("text-anchor", "middle").attr("transform", "rotate(-90)").attr("x", -150).attr("y", -60).text("New Cases over 7 day-avg");
+                        
+                        const line = d3.line().x(function(d) { return x(d.date); }).y(function(d) { return y(d.new_cases_smoothed); });
+                        svg.append("path").attr("d", line(eu)).attr("stroke", "currentColor").attr("fill", "none");
+
+                        const annotations = [
+                            {
+                                note: { label: "February 2022 - this is where we see the peak of new COVID cases throughout Europe" },
+                                x: x(new Date("2022-02-11")),
+                                y: y(1550000),
+                                dy: 40,
+                                dx: 80,
+                                type: d3.annotationLabel,
+                                connector: { end: "arrow" },
+                            },
+                            ];
+
+                        var ann = d3.annotation().annotations(annotations);
+                        svg.append("g").call(ann);
+
+                    } else if (number == 3) {
+                        svg.selectAll("*").remove()
+                        //show toggle
+                        d3.select("#toggleBtn").style("display", "inline");
+                        d3.select("#toggleBtn").style("visibility", "visible");
+                        if (toggleEurope) {
+                            var eu_countries = data.filter(function(d) {return d.location === 'Europe' 
+                                    || d.location === 'France' || d.location === 'Germany' || d.location === 'Italy' || d.location === 'Russia' || d.location === 'United Kingdom';});
+                
+                            console.log(eu_countries)
+                            //tooltip note here
+                            svg.append("rect").attr("x", width * 0.47).attr("y", 120).attr("height", 60).attr("width", 360).attr("fill", "#008080");
+                            svg.append("text").attr("x", width * 0.65).attr("y", 150).attr("text-anchor", "middle").style("font-size", "14px").text("Hover line for more details. Toggle Europe Button Available.");
+                            
+                            var country_group = d3.nest().key(function(d) {return d.location;}).entries(eu_countries);
+                            console.log(country_group);
+                            //axis
+                            const x = d3.scaleTime().domain(d3.extent(eu_countries, function(d) {return d.date;})).range([0,500]);
+                            const y = d3.scaleLinear().domain(d3.extent(eu_countries, function(d) {return d.new_cases_smoothed;})).range([300,0]);
+                            
+                            const x_axis = d3.axisBottom(x);
+                            const y_axis = d3.axisLeft(y);
+                            var colors = d3.scaleOrdinal(d3.schemeCategory10).domain(["Europe", "France", "Germany", "Italy", "Russia", "United Kingdom"]);
+
+                            var line = d3.line().x(function(d) { return x(d.date); }).y(function(d) { return y(d.new_cases_smoothed); });
+                            for (let i = 0; i < country_group.length; i++) {
+                                if (country_group[i].key === "Europe") {
+                                    svg.append("path").attr("d", line(country_group[i].values)).attr("stroke", colors(country_group[i].key)).attr("fill", "none").style("stroke-dasharray", "1, 5");
+                                } else {
+                                    svg.append("path").attr("d", line(country_group[i].values)).attr("stroke", colors(country_group[i].key)).attr("fill", "none");
+                                    svg.selectAll().data(country_group[i].values).enter()
+                                        .append("circle").attr("cx", function(d) {return x(d.date);}).attr("cy", function(d) {return y(d.new_cases_smoothed);})
+                                        .attr("r", 2).attr("fill", colors(country_group[i].key))
+                                        .on("mouseover", function(d) {d3.select("#toolTip").style("opacity", 1).style("left", "400px").html(d.location + "<br>" + d.date + "<br>" + "New Cases Weekly Average: " + Math.round(d.new_cases_smoothed));})
+                                        .on("mouseout", function(d) {d3.select("#toolTip").style("opacity", 0);});
+                                    //d3.select("#toolTip").style("right", 10 + "px");
+                                }
+                                
+                            }
+                            
+                            svg.append("text").attr("x", 600 / 2).attr("y", -10).attr("text-anchor", "middle").style("font-size", "18px").text("Covid-19 Across Top 5 Populous Countries in Europe");
+
+                            svg.append("g").attr("transform", "translate(0,300)").call(x_axis);
+                            svg.append("text").attr("class", "x-label").attr("text-anchor", "middle").attr("x", 250).attr("y", 340).text("Timeframe");
+                            svg.append("g").call(y_axis);
+                            svg.append("text").attr("class", "y-label").attr("text-anchor", "middle").attr("transform", "rotate(-90)").attr("x", -150).attr("y", -60).text("New Cases over 7 day-avg");
+
+                            var legend = svg.selectAll("labels").data(country_group).enter().append("g").attr("class", "legend").attr("transform", function(d, i) {return "translate(" +(i*100)+",380)";});
+                            legend.append("text").attr("x", 0).attr("y",-15).text(function(d) {return d.key;}).style("fill", function(d,i) {return colors(d.key);});
+                        } else {
+                            var eu_countries = data.filter(function(d) {return  d.location === 'France' || d.location === 'Germany' || d.location === 'Italy' || d.location === 'Russia' || d.location === 'United Kingdom';});
+                
+                            console.log(eu_countries)
+                            //tooltip note here
+                            svg.append("rect").attr("x", width * 0.47).attr("y", 120).attr("height", 60).attr("width", 360).attr("fill", "#008080");
+                            svg.append("text").attr("x", width * 0.65).attr("y", 150).attr("text-anchor", "middle").style("font-size", "14px").text("Hover line for more details. Toggle Europe Button Available.");
+
+                            var country_group = d3.nest().key(function(d) {return d.location;}).entries(eu_countries);
+                            console.log(country_group);
+                            //axis
+                            const x = d3.scaleTime().domain(d3.extent(eu_countries, function(d) {return d.date;})).range([0,500]);
+                            const y = d3.scaleLinear().domain(d3.extent(eu_countries, function(d) {return d.new_cases_smoothed;})).range([300,0]);
+                            
+                            const x_axis = d3.axisBottom(x);
+                            const y_axis = d3.axisLeft(y);
+                            var colors = d3.scaleOrdinal(d3.schemeCategory10).domain(["Europe", "France", "Germany", "Italy", "Russia", "United Kingdom"]);
+
+                            var line = d3.line().x(function(d) { return x(d.date); }).y(function(d) { return y(d.new_cases_smoothed); });
+                            for (let i = 0; i < country_group.length; i++) {
+                                if (country_group[i].key === "Europe") {
+                                    //svg.append("path").attr("d", line(country_group[i].values)).attr("stroke", colors(i)).attr("fill", "none").style("stroke-dasharray", "1, 5");
+                                } else {
+                                    svg.append("path").attr("d", line(country_group[i].values)).attr("stroke", colors(country_group[i].key)).attr("fill", "none");
+                                    svg.selectAll().data(country_group[i].values).enter()
+                                        .append("circle").attr("cx", function(d) {return x(d.date);}).attr("cy", function(d) {return y(d.new_cases_smoothed);})
+                                        .attr("r", 2).attr("fill", colors(country_group[i].key))
+                                        .on("mouseover", function(d) {d3.select("#toolTip").style("opacity", 1).style("left", "400px").html(d.location + "<br>" + d.date + "<br>" + "New Cases Weekly Average: " + Math.round(d.new_cases_smoothed));})
+                                        .on("mouseout", function(d) {d3.select("#toolTip").style("opacity", 0);});
+                                }
+                                
+                            }
+                            
+                            svg.append("text").attr("x", 600 / 2).attr("y", -10).attr("text-anchor", "middle").style("font-size", "18px").text("Covid-19 Across Top 5 Populous Countries in Europe");
+
+                            svg.append("g").attr("transform", "translate(0,300)").call(x_axis);
+                            svg.append("text").attr("class", "x-label").attr("text-anchor", "middle").attr("x", 250).attr("y", 340).text("Timeframe");
+                            svg.append("g").call(y_axis);
+                            svg.append("text").attr("class", "y-label").attr("text-anchor", "middle").attr("transform", "rotate(-90)").attr("x", -150).attr("y", -60).text("New Cases over 7 day-avg");
+
+                            var legend = svg.selectAll("labels").data(country_group).enter().append("g").attr("class", "legend").attr("transform", function(d, i) {return "translate(" +(i*100)+",380)";});
+                            legend.append("text").attr("x", 0).attr("y",-15).text(function(d) {return d.key;}).style("fill", function(d,i) {return colors(d.key);});
+                        }
+                    }
+
+                }
+                
+                renderScene(scene);
+
+                backButton.addEventListener('click', () => {
+                    if (scene - 1 >= minSceneNumber) {
+                        scene = scene - 1;
+                        console.log("back pressed");
+                        renderScene(scene)
+                    }
+                });
+
+                nextButton.addEventListener('click', () => {
+                    if (scene + 1 <= maxSceneNumber) {
+                        scene = scene + 1;
+                        console.log("next pressed");
+                        renderScene(scene);
+                    }
+                });
+
+                toggleEuropeBtn.addEventListener('click', () => {
+                    toggleEurope = !toggleEurope;
+                    renderScene(scene);
+                });
+            });
+        </script>
+    </div>
+</body>
