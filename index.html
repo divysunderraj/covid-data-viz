@@ -106,7 +106,39 @@
                         const line = d3.line().x(function(d) { return x(d.date); }).y(function(d) { return y(d.new_cases_smoothed); });
                         svg.append("path").attr("d", line(eu)).attr("stroke", "currentColor").attr("fill", "none");
 
-                        const annotations = [
+                         const annotations = [
+                            {
+                                note: { label: "This is where the first wave of COVID cases begin to affect Europe (April 2020)" },
+                                x: x(new Date("2020-04-01")),
+                                y: y(50000),
+                                dy: -70,
+                                dx: 40,
+                                type: d3.annotationLabel,
+                                connector: { end: "arrow" },
+                                color: "#FF0000"
+                            },
+                            ];
+
+                        var ann = d3.annotation().annotations(annotations);
+                        svg.append("g").call(ann);
+
+                        const new_annotation = [
+                            {
+                                note: { label: "The first vaccine comes out on December 27 2020" },
+                                x: x(new Date("2020-12-27")),
+                                y: y(240000),
+                                dy: -170,
+                                dx: 80,
+                                type: d3.annotationLabel,
+                                connector: { end: "arrow" },
+                                color: "#FF0000"
+                            },
+                            ];
+
+                        var ann2 = d3.annotation().annotations(new_annotation);
+                        svg.append("g").call(ann2);
+
+                        const annotations3 = [
                             {
                                 note: { label: "February 2022 peak in COVID - due to Omicron variant" },
                                 x: x(new Date("2022-02-11")),
@@ -119,8 +151,8 @@
                             },
                             ];
 
-                        var ann = d3.annotation().annotations(annotations);
-                        svg.append("g").call(ann);
+                        var ann3 = d3.annotation().annotations(annotations3);
+                        svg.append("g").call(ann3);
 
                         svg.append("rect").attr("x", width * 0.47).attr("y", 120 + 50).attr("height", 60).attr("width", 360).attr("fill", "#6F4E37");
                         svg.append("text").attr("x", width * 0.65).attr("y", 150 + 50).attr("text-anchor", "middle").style("font-size", "14px").text("Use Go Back/Next to navigate to different scenes");
